@@ -33,9 +33,9 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(status).body(err);
 	}
 	
-//	@ExceptionHandler(DuplicateEmailException.class)
+	@ExceptionHandler(DuplicateEmailException.class)
 	public ResponseEntity<StandardError> resourceDuplicateEmail(DuplicateEmailException e, HttpServletRequest request){
-		String error = "Email duplicado";
+		String error = "Email já cadastrado em nosso sistema!";
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(status).body(err);

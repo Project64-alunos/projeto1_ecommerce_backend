@@ -1,7 +1,6 @@
 package br.com.projetoecommerce.resources;
 
 import java.net.URI;
-import java.time.Instant;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.projetoecommerce.entities.User;
-import br.com.projetoecommerce.resources.exceptions.StandardErrorEmail;
 import br.com.projetoecommerce.services.UserService;
 
 @CrossOrigin(origins = "*")
@@ -31,7 +29,6 @@ public class UserResource {
 
 	@Autowired
 	private UserService service;
-	
 
 	@GetMapping()
 	public ResponseEntity<List<User>> findAll() {
@@ -55,18 +52,10 @@ public class UserResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> insert(@Valid @RequestBody User obj) {
-		if (service.findByEmail(obj.getEmail()) == null) {
-			obj = service.insert(obj);
-			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId())
-					.toUri();
-			return ResponseEntity.created(uri).body(obj);
-		} else {
-			String error = "Email duplicado";
-			HttpStatus status = HttpStatus.BAD_REQUEST;
-			StandardErrorEmail err = new StandardErrorEmail(Instant.now(), status.value(), error);
-			return ResponseEntity.status(status).body(err);
-		}
+	public ResponseEntity<User> insert(@Valid @RequestBody User obj) {
+		obj = service.insert(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).body(obj);
 	}
 
 	@DeleteMapping(value = "/{id}")

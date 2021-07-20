@@ -1,9 +1,7 @@
 package br.com.projetoecommerce.services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -15,6 +13,7 @@ import org.springframework.stereotype.Service;
 import br.com.projetoecommerce.entities.User;
 import br.com.projetoecommerce.repositories.UserRepository;
 import br.com.projetoecommerce.services.exceptions.DatabaseException;
+import br.com.projetoecommerce.services.exceptions.DuplicateEmailException;
 import br.com.projetoecommerce.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -22,7 +21,6 @@ public class UserService {
 
 	@Autowired
 	private UserRepository repository;
-	
 
 	public List<User> findAll() {
 		return repository.findAll();
@@ -34,28 +32,20 @@ public class UserService {
 	}
 
 	public List<User> findByName(String name) {
-		return new ArrayList<>(repository.findAll().stream().map(user -> user)
-				.filter(user -> user.getName().toUpperCase().contains(name.toUpperCase()))
-				.collect(Collectors.toList()));
+		return repository.findByNameContaining(name);
 	}
 
-	public User findByEmail(String email) {
-		User obj = null;
-		for (User user : repository.findAll()) {
-			if (email.contains(user.getEmail())) {
-				obj = user; // repository.findById(user.getId());
-			}
-		}
-		return obj;// .orElseThrow(() -> new ResourceNotFoundException(email));
+	public Optional<User> findByEmailValidation(String email) {
+		Optional<User> obj = repository.findByEmail(email);
+		return obj;
 	}
-//		return new ArrayList<>(repository.findAll().stream()
-//				.map(user -> user)
-//				.filter(user -> user.getEmail().toUpperCase().contains(email.toUpperCase()))
-//				.collect(Collectors.toList()));
-//	}
 
 	public User insert(User obj) {
-		return repository.save(obj);
+		if (findByEmailValidation(obj.getEmail()).isPresent()) {
+			throw new DuplicateEmailException(obj.getEmail());
+		} else {
+			return repository.save(obj);
+		}
 	}
 
 	public void delete(Long id) {
@@ -83,5 +73,9 @@ public class UserService {
 		entity.setName(obj.getName());
 		entity.setEmail(obj.getEmail());
 
+	}
+
+	public User findByEmail(String email) {
+		return repository.findByEmailContaining(email);
 	}
 }
