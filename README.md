@@ -1,4 +1,4 @@
-# projeto1_ecommerce_backend
+# Projeto 1 - Ecommerce
 
 # Sobre o projeto
 
@@ -36,3 +36,6 @@ cd backend
 Obs: O servidor iniciará na porta 8080 - Acesse <http://localhost:8080>
      /h2-console
 ```
+# Autores:
+
+Douglas da Silva Vulcano | Paulo Bruno | Matheus Cavalcante | Mariana Paixão
