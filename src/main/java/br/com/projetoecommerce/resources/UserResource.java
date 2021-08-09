@@ -22,7 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.projetoecommerce.entities.User;
 import br.com.projetoecommerce.services.UserService;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://wcecommerce.netlify.app/")
 @RestController
 @RequestMapping(value = "/users")
 public class UserResource {
@@ -30,7 +30,7 @@ public class UserResource {
 	@Autowired
 	private UserService service;
 
-	@GetMapping()
+	@PostMapping(value = "/all")
 	public ResponseEntity<List<User>> findAll() {
 		List<User> list = service.findAll();
 		return ResponseEntity.status(HttpStatus.OK).body(list);

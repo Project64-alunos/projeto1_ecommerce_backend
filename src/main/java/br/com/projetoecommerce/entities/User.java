@@ -1,11 +1,14 @@
 package br.com.projetoecommerce.entities;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -27,6 +30,8 @@ public class User implements Serializable {
 	@Email
 	@Size(max = 255)
 	private String email;
+	@Column(name = "Data")
+	private LocalDateTime creatDate;
 	
 	public User() {
 
@@ -56,6 +61,20 @@ public class User implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public LocalDateTime getcreatDate() {
+		return creatDate;
+	}
+
+	public void setcreatDate(LocalDateTime creatDate) {
+		this.creatDate = creatDate;
+	}
+
+	@PrePersist
+	private void prePersist() {
+		this.creatDate = LocalDateTime.now();
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -79,10 +98,12 @@ public class User implements Serializable {
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", email=" + email + "]";
+		return "User [id=" + id + ", name=" + name + ", email=" + email + ", creatDate=" + creatDate + "]";
 	}
+	
 	
 	
 }
