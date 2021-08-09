@@ -10,7 +10,7 @@
 
 <div align="center">
 
-<kbd><img src="https://github.com/Project64-alunos/imagens_projetos/blob/main/projetoEcommerce/ToolsDevelopment.png" alt="Tablet" width="600px;"/></kbd>
+<kbd><img src="https://github.com/Project64-alunos/imagens_projetos/blob/main/projetoEcommerce/developmentTool.png" alt="Tablet" width="900px;"/></kbd>
 
 </div>
 
