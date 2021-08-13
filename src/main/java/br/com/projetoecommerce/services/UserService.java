@@ -14,7 +14,6 @@ import br.com.projetoecommerce.entities.User;
 import br.com.projetoecommerce.repositories.UserRepository;
 import br.com.projetoecommerce.services.exceptions.DatabaseException;
 import br.com.projetoecommerce.services.exceptions.DuplicateEmailException;
-import br.com.projetoecommerce.services.exceptions.EmptyParameterException;
 import br.com.projetoecommerce.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -36,21 +35,18 @@ public class UserService {
 		return repository.findByNameContaining(name);
 	}
 
-	public Optional<User> findByEmailValidation(String email) {
-		Optional<User> obj = repository.findByEmail(email);
-		return obj;
+	
+	// Método para verificar se o email passado na requisição já EXISTE no banco de dados
+	public boolean isEmailExist(String email) {
+		return repository.findByEmail(email).isPresent();
 	}
-
+	
+	// Método para inserir novo cadastro. Incluindo tratamento de exceção: Email já cadastrado
 	public User insert(User obj) {
-		if (obj.getName().isEmpty() || obj.getEmail().isEmpty()) {
-			throw new EmptyParameterException();
-
-		} else if (findByEmailValidation(obj.getEmail()).isPresent()) {
-			throw new DuplicateEmailException(obj.getEmail());
-		} else {
-			return repository.save(obj);
-		}
+		if(isEmailExist(obj.getEmail())) throw new DuplicateEmailException(obj.getEmail());
+ 		else return repository.save(obj);
 	}
+
 
 	public void delete(Long id) {
 		try {
