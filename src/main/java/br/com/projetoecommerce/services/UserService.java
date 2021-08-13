@@ -14,6 +14,7 @@ import br.com.projetoecommerce.entities.User;
 import br.com.projetoecommerce.repositories.UserRepository;
 import br.com.projetoecommerce.services.exceptions.DatabaseException;
 import br.com.projetoecommerce.services.exceptions.DuplicateEmailException;
+import br.com.projetoecommerce.services.exceptions.EmptyParameterException;
 import br.com.projetoecommerce.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -41,7 +42,10 @@ public class UserService {
 	}
 
 	public User insert(User obj) {
-		if (findByEmailValidation(obj.getEmail()).isPresent()) {
+		if (obj.getName().isEmpty() || obj.getEmail().isEmpty()) {
+			throw new EmptyParameterException();
+
+		} else if (findByEmailValidation(obj.getEmail()).isPresent()) {
 			throw new DuplicateEmailException(obj.getEmail());
 		} else {
 			return repository.save(obj);

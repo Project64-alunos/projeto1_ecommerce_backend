@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import br.com.projetoecommerce.services.exceptions.DatabaseException;
 import br.com.projetoecommerce.services.exceptions.DuplicateEmailException;
+import br.com.projetoecommerce.services.exceptions.EmptyParameterException;
 import br.com.projetoecommerce.services.exceptions.ResourceNotFoundException;
 
 
@@ -41,5 +42,13 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(status).body(err);
 	}
 	
+	@ExceptionHandler(EmptyParameterException.class)
+	public ResponseEntity<StandardError> resourceNullNameEmail(EmptyParameterException e, HttpServletRequest request){
+		String error = "EmptyParameter";
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(status).body(err);
+	}
+
 
 }

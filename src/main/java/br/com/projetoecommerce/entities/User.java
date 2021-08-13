@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -23,14 +22,12 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotBlank
 	@Size(max = 60)
 	private String name;
-	@NotBlank
 	@Email
 	@Size(max = 255)
 	private String email;
-	@Column(name = "Data")
+	@Column(name = "data")
 	private LocalDateTime creatDate;
 	
 	public User() {

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.projetoecommerce.entities.User;
+import br.com.projetoecommerce.services.EmailService;
 import br.com.projetoecommerce.services.UserService;
 
 @CrossOrigin(origins = "https://wcecommerce.netlify.app/")
@@ -28,45 +29,49 @@ import br.com.projetoecommerce.services.UserService;
 public class UserResource {
 
 	@Autowired
-	private UserService service;
+	private UserService userService;
+	@Autowired
+	private EmailService emailService;
+
 
 	@PostMapping(value = "/all")
 	public ResponseEntity<List<User>> findAll() {
-		List<User> list = service.findAll();
+		List<User> list = userService.findAll();
 		return ResponseEntity.status(HttpStatus.OK).body(list);
 	}
 
 	@GetMapping(value = "/byId/{id}")
 	public ResponseEntity<User> findById(@RequestBody @PathVariable Long id) {
-		return ResponseEntity.ok(service.findById(id));
+		return ResponseEntity.ok(userService.findById(id));
 	}
 
 	@GetMapping(value = "/byName/{name}")
 	public ResponseEntity<List<User>> findByName(@RequestBody @PathVariable String name) {
-		return ResponseEntity.ok(service.findByName(name));
+		return ResponseEntity.ok(userService.findByName(name));
 	}
 
 	@GetMapping(value = "/byEmail/{email}")
 	public ResponseEntity<User> findByEmail(@RequestBody @PathVariable String email) {
-		return ResponseEntity.ok(service.findByEmail(email));
+		return ResponseEntity.ok(userService.findByEmail(email));
 	}
 
 	@PostMapping
 	public ResponseEntity<User> insert(@Valid @RequestBody User obj) {
-		obj = service.insert(obj);
+		obj = userService.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		emailService.sendMailAuto(obj);
 		return ResponseEntity.created(uri).body(obj);
 	}
 
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		service.delete(id);
+		userService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User obj) {
-		obj = service.update(id, obj);
+		obj = userService.update(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}
 
